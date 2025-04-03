@@ -2,27 +2,20 @@ name: 部署到GitHub Pages
 
 on:
     push:
-        branches: [main]
+        branches: ["main"]
     workflow_dispatch:
 
-permissions:
-    contents: read
-    pages: write
-    id-token: write
-
-concurrency:
-    group: "pages"
-    cancel-in-progress: false
-
 jobs:
-    build:
+    deploy:
         runs-on: ubuntu-latest
+        permissions:
+            contents: write
         steps:
             - name: 检出代码
-              uses: actions/checkout@v4
+              uses: actions/checkout@v3
 
             - name: 设置Node.js环境
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@v3
               with:
                   node-version: 18
                   cache: "npm"
@@ -31,23 +24,13 @@ jobs:
               run: npm ci
 
             - name: 构建项目
-              run: npm run build
+              run: |
+                  echo "sitemp.misssu.cn" > ./public/CNAME
+                  npm run build --base=/
 
-            - name: 设置Pages
-              uses: actions/configure-pages@v4
-
-            - name: 上传Pages artifact
-              uses: actions/upload-pages-artifact@v2
-              with:
-                  path: "./dist"
-
-    deploy:
-        environment:
-            name: github-pages
-            url: ${{ steps.deployment.outputs.page_url }}
-        runs-on: ubuntu-latest
-        needs: build
-        steps:
             - name: 部署到GitHub Pages
-              id: deployment
-              uses: actions/deploy-pages@v3
+              uses: peaceiris/actions-gh-pages@v3
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  publish_dir: ./dist
+                  cname: sitemp.misssu.cn
