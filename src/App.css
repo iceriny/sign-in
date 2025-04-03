@@ -1,0 +1,104 @@
+/* 移动端优化样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    height: 100%;
+    width: 100%;
+    overflow-x: hidden;
+    touch-action: manipulation;
+    color: rgba(0, 0, 0, 0.85);
+}
+
+#root {
+    height: 100%;
+    width: 100%;
+}
+
+/* 禁止选中文本 */
+.sign-in-list,
+.sign-in-groups {
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* 签到列表样式 */
+.sign-in-list .ant-list-item {
+    padding: 16px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* 分组记录样式 */
+.sign-in-groups .ant-card {
+    margin-bottom: 16px;
+    border-radius: 8px;
+}
+
+/* 触摸反馈效果 */
+.ant-btn,
+.ant-list-item {
+    transition: opacity 0.2s ease;
+}
+
+.ant-btn:active,
+.ant-list-item:active {
+    opacity: 0.7;
+}
+
+/* 底部导航高度 */
+.ant-menu-horizontal {
+    height: 60px;
+    line-height: 60px;
+}
+
+/* 为底部导航预留空间 */
+.ant-layout-content {
+    padding-bottom: 70px !important;
+}
+
+.logo {
+    height: 6em;
+    padding: 1.5em;
+    will-change: filter;
+    transition: filter 300ms;
+}
+.logo:hover {
+    filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+    filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    a:nth-of-type(2) .logo {
+        animation: logo-spin infinite 20s linear;
+    }
+}
+
+.card {
+    padding: 2em;
+}
+
+.read-the-docs {
+    color: #888;
+}
