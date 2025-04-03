@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Modal, Input, Button, message } from "antd";
+import { Modal, Input, Button, App } from "antd";
 import { UserAddOutlined } from "@ant-design/icons";
 import { importUsers } from "../utils/signInService";
 
@@ -13,6 +13,7 @@ const ImportUsers: React.FC<ImportUsersProps> = ({ onImportSuccess }) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [namesText, setNamesText] = useState("");
     const [loading, setLoading] = useState(false);
+    const { message } = App.useApp();
 
     const showModal = () => {
         setIsModalVisible(true);

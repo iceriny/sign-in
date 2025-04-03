@@ -1,4 +1,5 @@
 import { User, SignInRecord, SignInGroup } from "../types";
+import dayjs from "dayjs";
 
 // 使用本地存储模拟数据库
 const LOCAL_STORAGE_KEYS = {
@@ -52,7 +53,7 @@ export const signIn = (userId: string): void => {
 
     if (!user) return;
 
-    const currentTime = new Date().toISOString();
+    const currentTime = dayjs().toISOString();
     const newRecord: SignInRecord = {
         id: Date.now().toString(),
         userId,
@@ -78,11 +79,9 @@ export const signIn = (userId: string): void => {
     const lastGlobalSignInTime = localStorage.getItem(
         LOCAL_STORAGE_KEYS.LAST_SIGN_IN_TIME
     );
-    const currentTimeMs = new Date(currentTime).getTime();
-    const lastTimeMs = lastGlobalSignInTime
-        ? new Date(lastGlobalSignInTime).getTime()
-        : 0;
-    const timeDifferenceMinutes = (currentTimeMs - lastTimeMs) / (1000 * 60);
+    const timeDifferenceMinutes = lastGlobalSignInTime
+        ? dayjs(currentTime).diff(dayjs(lastGlobalSignInTime), "minute")
+        : 10;
 
     let groups = getSignInGroups();
 

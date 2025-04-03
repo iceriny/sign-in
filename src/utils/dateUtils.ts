@@ -1,3 +1,11 @@
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import "dayjs/locale/zh-cn";
+
+// 配置dayjs
+dayjs.extend(relativeTime);
+dayjs.locale("zh-cn");
+
 /**
  * 格式化日期时间显示
  * @param dateString ISO 格式的日期字符串
@@ -5,15 +13,7 @@
  */
 export const formatDateTime = (dateString: string | null): string => {
     if (!dateString) return "未签到";
-
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const day = date.getDate().toString().padStart(2, "0");
-    const hours = date.getHours().toString().padStart(2, "0");
-    const minutes = date.getMinutes().toString().padStart(2, "0");
-
-    return `${year}-${month}-${day} ${hours}:${minutes}`;
+    return dayjs(dateString).format("YYYY-MM-DD HH:mm");
 };
 
 /**
@@ -22,22 +22,31 @@ export const formatDateTime = (dateString: string | null): string => {
  * @returns 相对时间字符串
  */
 export const formatRelativeTime = (dateString: string): string => {
-    const now = new Date();
-    const date = new Date(dateString);
-    const diffMs = now.getTime() - date.getTime();
+    return dayjs(dateString).fromNow();
+};
 
-    // 转换为分钟
-    const diffMinutes = Math.floor(diffMs / (1000 * 60));
+/**
+ * 计算两个时间点之间的分钟差
+ * @param dateString1 第一个时间点
+ * @param dateString2 第二个时间点
+ * @returns 分钟差
+ */
+export const getMinutesDiff = (
+    dateString1: string,
+    dateString2: string
+): number => {
+    return dayjs(dateString1).diff(dayjs(dateString2), "minute");
+};
 
-    if (diffMinutes < 1) {
-        return "刚刚";
-    } else if (diffMinutes < 60) {
-        return `${diffMinutes}分钟前`;
-    } else if (diffMinutes < 60 * 24) {
-        return `${Math.floor(diffMinutes / 60)}小时前`;
-    } else if (diffMinutes < 60 * 24 * 7) {
-        return `${Math.floor(diffMinutes / (60 * 24))}天前`;
-    } else {
-        return formatDateTime(dateString);
-    }
+/**
+ * 检查是否应该创建新分组（超过10分钟）
+ * @param lastSignInTime 上次签到时间
+ * @returns 是否应该创建新分组
+ */
+export const shouldCreateNewGroup = (
+    lastSignInTime: string | null
+): boolean => {
+    if (!lastSignInTime) return true;
+    const minutesDiff = dayjs().diff(dayjs(lastSignInTime), "minute");
+    return minutesDiff > 10;
 };

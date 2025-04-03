@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { List, Button, message } from "antd";
+import { List, Button, Typography, App } from "antd";
 import { CheckCircleOutlined } from "@ant-design/icons";
 import { User } from "../types";
 import { getUsers, signIn } from "../utils/signInService";
-import { formatDateTime } from "../utils/dateUtils";
+import { formatDateTime, shouldCreateNewGroup } from "../utils/dateUtils";
 import ImportUsers from "./ImportUsers";
+
+const { Text } = Typography;
 
 const SignInList: React.FC = () => {
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(false);
+    const { message } = App.useApp();
 
     useEffect(() => {
         loadUsers();
@@ -55,9 +58,21 @@ const SignInList: React.FC = () => {
                     >
                         <List.Item.Meta
                             title={<span>{user.name}</span>}
-                            description={`最近签到: ${formatDateTime(
-                                user.lastSignInTime
-                            )}`}
+                            description={
+                                <Text
+                                    type={
+                                        user.lastSignInTime &&
+                                        shouldCreateNewGroup(
+                                            user.lastSignInTime
+                                        )
+                                            ? "danger"
+                                            : "secondary"
+                                    }
+                                >
+                                    最近签到:{" "}
+                                    {formatDateTime(user.lastSignInTime)}
+                                </Text>
+                            }
                         />
                     </List.Item>
                 )}
